@@ -1,0 +1,39 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n-online
+    restart: unless-stopped
+    # ports:
+    #   - "5678:5678"
+    expose:
+      - "5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=https://n8n.thetainformation.com/
+      - GENERIC_TIMEZONE=Asia/Taipei
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - n8n_network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiOGFiNTkzOWU0NjUyMDhlMmIwZGFhZDUwNjJhYmUxNTgiLCJ0IjoiMzhmYmQwZDMtMzQ4OC00YjEyLWI2NjktMWFhZGVkY2UxYzRkIiwicyI6IllqTmpZVEZoTVRZdE1UTmtNQzAwWXpReExUZzRaRGt0TURWbE1EUmhaVE5tTnpkbCJ9
+    networks:
+      - n8n_network
+    depends_on:
+      - n8n
+
+volumes:
+  n8n_data:
+    driver: local
+
+networks:
+  n8n_network:
+    driver: bridge

@@ -1,0 +1,7 @@
+tunnel: 38fbd0d3-3488-4b12-b669-1aadedce1c4d
+credentials-file: /etc/cloudflared/creds.json
+
+ingress:
+  - hostname: n8n.thetainformation.com
+    service: http://n8n:5678
+  - service: http_status:404
